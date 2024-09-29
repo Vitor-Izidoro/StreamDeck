@@ -59,25 +59,34 @@ void loop() {
     delay(100);
     Keyboard.releaseAll();
     
-    // Imprime no serial monitor
-    Serial.println("Aplicativo Notepad aberto");
-    Serial.println("Botão 3 pressionado");
+
   }
 
   // Verifica se o botão 4 foi pressionado
   if (buttonState4 == LOW && lastButtonState4 == HIGH) {
     // Aqui você pode colocar a função desejada para o botão 4Keyboard.press(KEY_LEFT_GUI); 
-    delay(3000);
+    Keyboard.press(KEY_LEFT_GUI); // Tecla Win (esquerda)
+    delay(100);
     Keyboard.releaseAll();
-    Keyboard.print("google");
+    delay(100);
+    Keyboard.print("meu computador");
+    delay(250);
     Keyboard.press(KEY_RETURN);
-    Serial.println("Botão 4 pressionado");
+    delay(100);
+    Keyboard.releaseAll();
   }
 
   // Verifica se o botão 5 foi pressionado
   if (buttonState5 == LOW && lastButtonState5 == HIGH) {
-    // Aqui você pode colocar a função desejada para o botão 5
-    Serial.println("Botão 5 pressionado");
+    Keyboard.press(KEY_LEFT_GUI); // Tecla Win (esquerda)
+    delay(100);
+    Keyboard.releaseAll();
+    delay(100);
+    Keyboard.print("camera");
+    delay(250);
+    Keyboard.press(KEY_RETURN);
+    delay(100);
+    Keyboard.releaseAll();
   }
 
   // Verifica se o botão 6 foi pressionado
@@ -89,6 +98,7 @@ void loop() {
     Keyboard.release(KEY_TAB);
     Keyboard.release(KEY_LEFT_ALT);
     Serial.println("Botão 6 pressionado (Alt + Tab simulado)");
+    Keyboard.releaseAll();
   }
 
   // Atualiza o estado anterior de cada botão
