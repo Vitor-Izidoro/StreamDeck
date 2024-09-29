@@ -78,16 +78,13 @@ void loop() {
 
   // Verifica se o botão 5 foi pressionado
   if (buttonState5 == LOW && lastButtonState5 == HIGH) {
-    Keyboard.press(KEY_LEFT_GUI); // Tecla Win (esquerda)
+    Keyboard.press(KEY_LEFT_ALT); // Pressiona a tecla Alt
     delay(100);
-    Keyboard.releaseAll();
+    Keyboard.press(KEY_F4); // Pressiona a tecla F4
     delay(100);
-    Keyboard.print("camera");
-    delay(250);
-    Keyboard.press(KEY_RETURN);
-    delay(100);
-    Keyboard.releaseAll();
+    Keyboard.releaseAll(); // Solta todas as teclas
   }
+  
 
   // Verifica se o botão 6 foi pressionado
   if (buttonState6 == LOW && lastButtonState6 == HIGH) {
