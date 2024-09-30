@@ -30,3 +30,6 @@ Stream Deck é um pequeno painel de controle com botões personalizáveis, Usand
 Conecte o outro terminal de cada botão ao GND (terra).
 
 3. Todos os botões terão um terminal comum que se conectará ao pino GND do Arduino.
+
+
+video mostrando o funcionamento: https://youtu.be/j9-YDa2oRsY
