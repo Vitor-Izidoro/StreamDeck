@@ -14,87 +14,108 @@ int lastButtonState4 = HIGH;
 int lastButtonState5 = HIGH;
 int lastButtonState6 = HIGH;
 
+// Tempo de debounce
+unsigned long debounceDelay = 50;
+unsigned long lastDebounceTime3 = 0;
+unsigned long lastDebounceTime4 = 0;
+
 void setup() {
-  // Inicializa os pinos dos botões como entrada com pull-up interno
   pinMode(buttonPin2, INPUT_PULLUP);
   pinMode(buttonPin3, INPUT_PULLUP);
   pinMode(buttonPin4, INPUT_PULLUP);
   pinMode(buttonPin5, INPUT_PULLUP);
   pinMode(buttonPin6, INPUT_PULLUP);
   
-  // Inicializa a comunicação serial para depuração
   Serial.begin(9600);
-  // Inicializa a biblioteca de teclado
   Keyboard.begin();
 }
 
 void loop() {
-  // Lê o estado atual de cada botão (LOW quando pressionado devido ao pull-up)
+  // Lê o estado atual de cada botão
   int buttonState2 = digitalRead(buttonPin2);
   int buttonState3 = digitalRead(buttonPin3);
   int buttonState4 = digitalRead(buttonPin4);
   int buttonState5 = digitalRead(buttonPin5);
   int buttonState6 = digitalRead(buttonPin6);
 
-  // Verifica se o botão 2 foi pressionado
+  unsigned long currentTime = millis();
+  
+  // Verifica o botão 3 com debounce
+  if (buttonState3 != lastButtonState3 && (currentTime - lastDebounceTime3) > debounceDelay) {
+    lastDebounceTime3 = currentTime;
+    if (buttonState3 == LOW) {
+      // Verifica se o botão 4 está pressionado simultaneamente
+      if (buttonState4 == LOW) {
+        // Ambos os botões 3 e 4 pressionados ao mesmo tempo
+        Keyboard.press(KEY_LEFT_GUI);
+        delay(100);
+        Keyboard.releaseAll();
+        delay(100);
+        Keyboard.print("steam");
+        delay(250);
+        Keyboard.press(KEY_RETURN);
+        delay(100);
+        Keyboard.releaseAll();
+        Serial.println("Botões 3 e 4 pressionados juntos");
+      } else {
+        // Apenas o botão 3 foi pressionado
+        Keyboard.press(KEY_LEFT_GUI); 
+        delay(50);
+        Keyboard.releaseAll();
+        delay(100);
+        Keyboard.print("google");
+        delay(250);
+        Keyboard.press(KEY_RETURN);
+        delay(100);
+        Keyboard.releaseAll();
+        Serial.println("Botão 3 pressionado");
+      }
+    }
+  }
+
+  // Verifica o botão 4 com debounce
+  if (buttonState4 != lastButtonState4 && (currentTime - lastDebounceTime4) > debounceDelay) {
+    lastDebounceTime4 = currentTime;
+    if (buttonState4 == LOW && buttonState3 != LOW) {
+      // Apenas o botão 4 foi pressionado
+      Keyboard.press(KEY_LEFT_GUI); 
+      delay(100);
+      Keyboard.releaseAll();
+      delay(100);
+      Keyboard.print("meu computador");
+      delay(250);
+      Keyboard.press(KEY_RETURN);
+      delay(100);
+      Keyboard.releaseAll();
+      Serial.println("Botão 4 pressionado");
+    }
+  }
+
+  // Verifica os outros botões normalmente
   if (buttonState2 == LOW && lastButtonState2 == HIGH) {
-    // Simula a combinação de teclas Ctrl + V
     Keyboard.press(KEY_LEFT_CTRL);
     Keyboard.press('v');
     delay(100);
-    Keyboard.releaseAll();  
-    Serial.println("Botão 2 pressionado (Ctrl + V simulado)");
+    Keyboard.releaseAll();
+    Serial.println("Botão 2 pressionado (Ctrl + V)");
   }
 
-  // Verifica se o botão 3 foi pressionado
-  if (buttonState3 == LOW && lastButtonState3 == HIGH) {
-    // Aqui você pode colocar a função desejada para o botão 3
-    Keyboard.press(KEY_LEFT_GUI); // Tecla Win (esquerda)
-    delay(50);
-    Keyboard.releaseAll();
-    delay(100); // Espera um pouco para a caixa de diálogo Executar abrir completamente
-    Keyboard.print("google");
-    delay(250);
-    Keyboard.press(KEY_RETURN);
-    delay(100);
-    Keyboard.releaseAll();
-    
-
-  }
-
-  // Verifica se o botão 4 foi pressionado
-  if (buttonState4 == LOW && lastButtonState4 == HIGH) {
-    // Aqui você pode colocar a função desejada para o botão 4Keyboard.press(KEY_LEFT_GUI); 
-    Keyboard.press(KEY_LEFT_GUI); // Tecla Win (esquerda)
-    delay(100);
-    Keyboard.releaseAll();
-    delay(100);
-    Keyboard.print("meu computador");
-    delay(250);
-    Keyboard.press(KEY_RETURN);
-    delay(100);
-    Keyboard.releaseAll();
-  }
-
-  // Verifica se o botão 5 foi pressionado
   if (buttonState5 == LOW && lastButtonState5 == HIGH) {
-    Keyboard.press(KEY_LEFT_ALT); // Pressiona a tecla Alt
+    Keyboard.press(KEY_LEFT_ALT);
     delay(100);
-    Keyboard.press(KEY_F4); // Pressiona a tecla F4
+    Keyboard.press(KEY_F4);
     delay(100);
-    Keyboard.releaseAll(); // Solta todas as teclas
+    Keyboard.releaseAll();
+    Serial.println("Botão 5 pressionado (Alt + F4)");
   }
-  
 
-  // Verifica se o botão 6 foi pressionado
   if (buttonState6 == LOW && lastButtonState6 == HIGH) {
-    // Simula a combinação de teclas Alt + Tab
     Keyboard.press(KEY_LEFT_ALT);
     Keyboard.press(KEY_TAB);
     delay(100);
     Keyboard.release(KEY_TAB);
     Keyboard.release(KEY_LEFT_ALT);
-    Serial.println("Botão 6 pressionado (Alt + Tab simulado)");
+    Serial.println("Botão 6 pressionado (Alt + Tab)");
     Keyboard.releaseAll();
   }
 
@@ -105,6 +126,5 @@ void loop() {
   lastButtonState5 = buttonState5;
   lastButtonState6 = buttonState6;
 
-  // Pequeno atraso para evitar a leitura errada dos botões
-  delay(50);
+  delay(50);  // Debounce simples para evitar leituras erradas
 }
